@@ -9,7 +9,7 @@ public class Rover {
 
 	private static HashMap<Direction, BiFunction<RoverState, Integer, RoverState>> moveVectorMap = new HashMap<>();
 	static {
-		moveVectorMap.put(Direction.NORTH, Rover::moveDownUpOnYAxis);
+		moveVectorMap.put(Direction.NORTH, Rover::moveUpOnYAxis);
 		moveVectorMap.put(Direction.SOUTH, Rover::moveDownOnYAxis);
 		moveVectorMap.put(Direction.EAST, Rover::moveRightOnXAxis);
 		moveVectorMap.put(Direction.WEST, Rover::moveLeftOnXAxis);
@@ -47,7 +47,7 @@ public class Rover {
 		return Rover.moveVectorMap.get(state.getDirection()).apply(state, step);
 	}
 
-	private static RoverState moveDownUpOnYAxis(RoverState state, Integer step) {
+	private static RoverState moveUpOnYAxis(RoverState state, Integer step) {
 		return Rover.moveOnYAxis(state, step, initialStep -> initialStep);
 	}
 
