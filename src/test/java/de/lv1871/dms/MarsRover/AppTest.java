@@ -23,4 +23,12 @@ public class AppTest {
 		assertEquals(3, rover.getX());
 		assertEquals(3, rover.getY());
 	}
+
+	@Test
+	public void testTurnLeftThanBack() {
+		Rover rover = new Rover(1, 1, Direction.NORTH);
+		rover.processCommands("lbb");
+		assertEquals(3, rover.getX());
+		assertEquals(1, rover.getY());
+	}
 }
