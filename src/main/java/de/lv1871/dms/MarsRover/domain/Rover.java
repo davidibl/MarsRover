@@ -44,7 +44,7 @@ public class Rover {
 			.stream(commands.split(""))
 			.map(Command::fromChar)
 			.map(Rover.implementationMap::get)
-			.map(func -> func.curryWith(Rover::getMoveVector))
+			.map(Rover::curryWithMoveVector)
 			.reduce(Function.identity(), Function::andThen)
 			.apply(state);
 		// @formatter:on
@@ -85,6 +85,11 @@ public class Rover {
 
 	private static Integer inverseDirection(Integer step) {
 		return step * -1;
+	}
+
+	private static Function<RoverState, RoverState> curryWithMoveVector(
+			ExtendedFunction<BiFunction<RoverState, Integer, RoverState>, RoverState, RoverState> implementation) {
+		return implementation.curryWith(Rover::getMoveVector);
 	}
 
 }
