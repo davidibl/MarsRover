@@ -15,6 +15,14 @@ public class Rover {
 		moveVectorMap.put(Direction.WEST, Rover::moveLeftOnXAxis);
 	}
 
+	private static HashMap<Command, ExtendedFunction<BiFunction<RoverState, Integer, RoverState>, RoverState, RoverState>> implementationMap = new HashMap<>();
+	static {
+		implementationMap.put(Command.FORWARD, (moveVector, state) -> moveVector.apply(state, 1));
+		implementationMap.put(Command.BACKWARD, (moveVector, state) -> moveVector.apply(state, -1));
+		implementationMap.put(Command.TURN_RIGHT, (moveVector, state) -> Rover.turn(state, Direction::getToRight));
+		implementationMap.put(Command.TURN_LEFT, (moveVector, state) -> Rover.turn(state, Direction::getToLeft));
+	}
+
 	private RoverState state;
 
 	public Rover(int x, int y, Direction direction) {
@@ -35,7 +43,7 @@ public class Rover {
 		this.state = Arrays
 			.stream(commands.split(""))
 			.map(Command::fromChar)
-			.map(Command::getFunc)
+			.map(Rover.implementationMap::get)
 			.map(func -> func.curryWith(Rover::getMoveVector))
 			.reduce(Function.identity(), Function::andThen)
 			.apply(state);
@@ -49,6 +57,10 @@ public class Rover {
 
 	private static RoverState moveUpOnYAxis(RoverState state, Integer step) {
 		return Rover.moveOnYAxis(state, step, initialStep -> initialStep);
+	}
+
+	private static RoverState turn(RoverState state, Function<Direction, Direction> func) {
+		return new RoverState(state.getX(), state.getY(), func.apply(state.getDirection()));
 	}
 
 	private static RoverState moveDownOnYAxis(RoverState state, Integer step) {
